@@ -1,5 +1,7 @@
 package com.brian.app.services;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,13 @@ public void save()
 	Employee employee=new Employee("samuel",department);
 	 employeeRepository.save(employee);
 	
+	
+}
+
+@Transactional
+public List<Department>  list()
+{
+return departmentRepository.getdep();
 	
 }
 }
