@@ -1,57 +1,52 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-<a href="login/save">click me</a>
-
-<a href="test/save">click hibernate</a>
-
-<a href="testonetomany/onetomany">click one to many</a>
-<a href="testmanytoone/manytoone">click one to many</a>
-<html>
-<head>
-<script src="extensions/angularjs.min.js"></script>
-<script>
-		var app = angular.module('myApp', []);
-		app.controller('loginControl', function($scope, $http) {
-			$scope.setValues = function() {
-				alert("post");
-				$http({
-					method : 'POST',
-					url : 'login/save',
-					headers : {
-						'Content-Type' : 'application/json'
-					},
-					data : $scope.A
-				}).then(function(data) {
-					alert(JSON.stringify(data));
-				});
-			};
-
-			$scope.getValues = function() {
-				alert("get");
-				$http.get('/v1/address/passtoapi1').then(
-						function(response) {
-							if (response) {
-								alert(JSON.stringify(response));
-							}
-						});
-			};
-
-		});
-	</script>
-
-</head>
-<body ng-app="myApp" ng-controller="loginControl">
-
-	<input type="text" ng-model="A.customername" placeholder="Enter Username" required>
-	<input type="password" ng-model="A.customerpassword" placeholder="Enter Password" required>
-	<input type="button" value="Send" ng-click="setValues()" />
-	<input type="button" value="Send" ng-click="getValues()" />
-
-	
-</body>
-</html>
+    <html>
+    <head>
+    <script src="extensions/angular.min.js"></script>
+    <script src="bower_components/angular-base64/angular-base64.js"></script>
+    </head>
+    <body ng-app="myApp" ng-controller="testcontrol">
+    
+        <input type="text" ng-model="A.username" placeholder="Enter Username" required>
+        <input type="password" ng-model="A.password" placeholder="Enter Password" required>
+        <input type="file"  placeholder="Browse image" name="file" id="test" required>
+  
+    
+    
+        <input type="button" value="Send" ng-click="setValues()" />
+    
+        <script>
+    
+    
+            var app = angular.module('myApp', []);
+    
+    
+    
+            app.controller('testcontrol', function($scope, $http) {
+                $scope.setValues = function() {
+                	var formData = new FormData();            	
+                    var file = '#test';
+                    var json = $scope.A;
+                    formData.append("file", file);
+                    formData.append("ads",JSON.stringify(json));
+                
+                    $http({
+                        method : 'POST',
+                        url : 'form/upload',
+                        headers : {
+                            'Content-Type' : 'undefined'
+                        },
+                        data : formData
+                    }).success(function(data) {
+    
+    
+                        alert(JSON.stringify(data));
+                    });
+                };
+    
+               
+    
+            });
+        </script>
+        
+        
+    </body>
+    </html>
