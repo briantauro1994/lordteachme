@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<script data-require="angular.js@*" data-semver="1.3.7" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.7/angular.js"></script>
+<script src="extensions/angular.min.js"></script>
 
 
 <script>
@@ -21,12 +21,12 @@
 		};
 
 		$scope.uploadFile = function() {
-			alert("best");
-			var formData = new FormData();
+
+			var form = document.getElementById('a');
+			var formData = new FormData(form);
+
 			$scope.dataform = {};
 			formData.append('formdata', JSON.stringify($scope.document));
-			formData.append("file", file.files[0]);
-			formData.append("file1", file1.files[0]);
 			$http.post('form/up', formData, {
 				transformRequest : function(data, headersGetterFunction) {
 					return data;
@@ -37,7 +37,7 @@
 			}).success(function(data, status) {
 				alert("Success ... " + status);
 			}).error(function(data, status) {
-				alert("Error ... " + status);
+				alert(data+" ... " + status);
 			});
 		};
 	});
@@ -46,12 +46,16 @@
 
 </head>
 <body ng-app="mainApp" ng-controller="FileUploadController">
-	<form ng-submit="uploadFile()" class="form-horizontal" enctype="multipart/form-data">
-	
-		<input type="file"  id="file"/>
-		<input type="text" ng-model="document.title"/>
-		<input type="file"  id="file1"/>
+	<form ng-submit="uploadFile()" class="form-horizontal" enctype="multipart/form-data" id="a">
 
+		<input type="file" name="file[0]" />
+		<input type="file" name="file[1]" />
+		<br>
+		<input type="file" name="filea[0]" />
+		<input type="file" name="filea[1]" />
+		<br>
+		<input type="text" ng-model="document.title" />
+		<br>
 		<button class="btn btn-primary" type="submit">Submit</button>
 	</form>
 </body>

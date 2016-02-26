@@ -13,7 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,63 +33,33 @@ import com.brian.app.dto.TestDto1;
 @RequestMapping(value = "/form")
 public class Form {
 
-	@RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = { "multipart/form-data" })
-	public @ResponseBody void storeAd(@RequestPart("asd") String adString, @RequestPart("file") MultipartFile file)
-			throws IOException {
-		logger.info("entered controller");
-		TestDto1 jsonAd = new ObjectMapper().readValue(adString, TestDto1.class);
-		// do whatever you want with your file and jsonAd
-
-	}
+	
 
 	@RequestMapping(value = "/up", method = RequestMethod.POST, consumes = { "multipart/form-data" })
-	public @ResponseBody void storeAd1(@RequestParam("formdata") String s, MultipartHttpServletRequest request) {
-
-		logger.info("message" + request.getFileNames());
+	public @ResponseBody ResponseEntity<String> storeAd1(  MultipartHttpServletRequest request) throws Exception {
+try{
+	
+	String s=request.getParameter("formdata");
+		logger.info("message" + s);
 
 		Iterator<String> it = request.getFileNames();
-		logger.info(request.getFile("file").getSize());
-		logger.info(request.getFile("file1").getSize());
+//		logger.info(request.getFile("file").getSize());
+//		logger.info(request.getFile("file1").getSize());
 		// do whatever you want with your file and jsonAd
-
+		return new ResponseEntity<>("successytesr", HttpStatus.ACCEPTED);
+}
+catch(Exception e)
+{
+	throw new Exception();
+}
 	}
 
-	@ResponseBody
-	@RequestMapping(value = "/post", method = RequestMethod.POST)
-	public String save(@RequestBody TestDto test) {
-		String s = test.getImage();
-
-		logger.info("username" + test.getUsername());
-		logger.info("password" + test.getPassword());
-		logger.info("image" + s);
-		logger.info("hello" + test.getHello());
-		byte[] decodedValue = Base64.getDecoder().decode(test.getImage());
-
-		try {
-			FileOutputStream f = new FileOutputStream(new File("/home/shalom/Pictures/tets1.png"));
-
-			f.write(decodedValue);
-			f.close();
-
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		logger.info("save");
-		return "success";
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<String> errorHandler(Exception exc) {
+		logger.error(exc.getMessage(), exc);
+		return new ResponseEntity<>("timepass", HttpStatus.BAD_REQUEST);
 	}
 
-	@ResponseBody
-	@RequestMapping(value = "/get", method = RequestMethod.POST)
-	public String saveget() {
-
-		logger.info("get");
-		return "success";
-	}
-
+	
 	private static final Logger logger = Logger.getLogger(Form.class);
 }
